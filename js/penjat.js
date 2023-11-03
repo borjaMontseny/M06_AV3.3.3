@@ -98,9 +98,14 @@ function loseLive() {
 
         // Per a que canvii a un que reinicia la página
         btnOk.addEventListener("click", restartGame);
+
+        // cambiar a que se desactiven todos los listeners menos NEW GAME
+
+
+
     }
 
-    livesText.innerHTML = (gameStatus.lives + "\n LIVES \nLEFT");
+    livesText.innerHTML = ("<br><br><br>" + gameStatus.lives + "<br> LIVES <br>LEFT");
 
     if (gameStatus.lives < 5 && gameStatus.lives >= 0) {
         document.getElementById("monster").src = ("img/monster" + gameStatus.lives + ".png");
