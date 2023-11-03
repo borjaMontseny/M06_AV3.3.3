@@ -151,6 +151,11 @@ function pressKey(event) {
         showInfoMessage();
     } else if (gameStatus.wordToGuess === gameStatus.wordCompleted) {
         gameStatus.status = "completed";
+        // eliminem el listener del botó continuar
+        btnOk.removeEventListener("click", closeMessage);
+
+        // Per a que canvii a un que reinicia la página
+        btnOk.addEventListener("click", restartGame);
         showInfoMessage();
     }
 
