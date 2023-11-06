@@ -69,11 +69,11 @@ function showInfoMessage() {
         btnOk.style.display = "block";
     } else if (gameStatus.lives === 0 && gameStatus.status === "completed") {
         divInfo.style.display = "block";
+        // al acabar la partida, el missatge de derrota mostra també la paraula buscada
         msgGameFail.innerHTML = "No has salvat al monstre. Llàstima!<br> La paraula era:<br>" + gameStatus.wordToGuess.toUpperCase();
         msgGameFail.style.display = "block";
         btnOk.style.display = "block";
     }
-
 }
 
 // funció del botó Continuar, tanca els missatges de showInfoMessage()
@@ -84,7 +84,6 @@ function closeMessage() {
     msgGameSuccess.style.display = "none";
     msgGameFail.style.display = "none";
     btnOk.style.display = "none";
-
 }
 
 // funcio de perdre una vida i actualitzar en funció d'aquesta l'imatge
@@ -114,8 +113,8 @@ function giveClue() {
 
     loseLive();
 
-    // ensenyem una lletra no registrada ja:
-    do { // calculem una lletra de la paraula que no hagi sigut mostrada encara
+    // com ensenyem una lletra no registrada ja?
+    do { // calculem una lletra aleatòria de la paraula fins que no sigui igual que les ja trobades
         clueLetter = gameStatus.wordToGuess.charAt(getRandomNumber(0, gameStatus.wordToGuess.length));
     } while (gameStatus.wordCompleted.includes(clueLetter));
 
@@ -123,14 +122,11 @@ function giveClue() {
 
     devConsoleInfo();
     showInfoMessage();
-
 }
 
 // al moure el ratolí fora de la capsa de pista, aquesta torna a mostrar '?'
 function cleanClueBox() {
-
     clueText.innerHTML = "?";
-
 }
 
 // funció del teclat
@@ -168,11 +164,8 @@ function pressKey(event) {
         btnOk.addEventListener("click", restartGame);
         showInfoMessage();
     }
-
     devConsoleInfo();
-
 }
-
 
 // missatges de la consola per al desenvolupador
 function devConsoleInfo() {
