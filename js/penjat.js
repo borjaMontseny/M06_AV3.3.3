@@ -1,7 +1,6 @@
 // Borja Montseny Peris DAW2 Dual Tarda
 /* Estructura "constant" del joc */
 var gameConfig = {
-    liveLook: ["monster5.png", "monster4.png", "monster3.png", "monster2.png", "monster1.png", "monster0.png"],
     wordsToGuess: ["elefant", "criatura", "llapis", "maduixa"],
     numberOfLives: 5,
 }
@@ -20,7 +19,7 @@ for (let index = 0; index < gameStatus.wordToGuess.length; index++) {
     gameStatus.wordCompleted += "_";
 }
 
-// variables que creem aquí per a no fer-ho cada cop a les funcions
+// variables per asignar listeners i elements del DOM
 var divInfo; // recuadre verd de missatge
 var msgWelcome; // missatge de benvinguda
 var msgGameSuccess; // joc finalitzat correctament
@@ -29,10 +28,10 @@ var btnOk; // botó Continuar
 var livesText; // text del recuadre de vides
 var pressedKey; // tecla premuda
 var newGameButton; // botó NEW GAME -> Partida nova (refrescar)
-var clueBox;
-var letters;
-var clueText;
-var clueLetter = "";
+var clueBox; // recuadre de la pista
+var letters; // paraula oculta en forma de _____
+var clueText; // text dins de clueBox
+var clueLetter = ""; // variable que guardarà la lletra de clueBox
 
 window.onload = function () {
 
@@ -48,6 +47,7 @@ window.onload = function () {
     newGameButton.addEventListener("click", restartGame);
     btnOk.addEventListener("click", closeMessage);
     clueBox.addEventListener("mouseenter", giveClue);
+    clueBox.addEventListener("mouseleave", cleanClueBox);
     letters = document.getElementById("letters");
     clueText = document.getElementById("clue").getElementsByTagName("span")[0];
 
@@ -60,6 +60,7 @@ function getRandomNumber(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// depenent de les vides i status del joc, mostrarem un missatge o un altre
 function showInfoMessage() {
 
     if (gameStatus.lives >= 1 && gameStatus.status === "completed") {
@@ -68,12 +69,14 @@ function showInfoMessage() {
         btnOk.style.display = "block";
     } else if (gameStatus.lives === 0 && gameStatus.status === "completed") {
         divInfo.style.display = "block";
+        msgGameFail.innerHTML = "No has salvat al monstre. Llàstima!<br> La paraula era:<br>" + gameStatus.wordToGuess.toUpperCase();
         msgGameFail.style.display = "block";
         btnOk.style.display = "block";
     }
 
 }
 
+// funció del botó Continuar, tanca els missatges de showInfoMessage()
 function closeMessage() {
 
     divInfo.style.display = "none";
@@ -84,7 +87,7 @@ function closeMessage() {
 
 }
 
-// funcio de perdre una vida, si es < 5, perdem
+// funcio de perdre una vida i actualitzar en funció d'aquesta l'imatge
 function loseLive() {
     gameStatus.lives--;
 
@@ -93,15 +96,9 @@ function loseLive() {
         msgGameFail.style.display = "block";
         btnOk.style.display = "block";
 
-        // eliminem el listener del botó continuar
-        btnOk.removeEventListener("click", closeMessage);
-
-        // Per a que canvii a un que reinicia la página
-        btnOk.addEventListener("click", restartGame);
-
         // cambiar a que se desactiven todos los listeners menos NEW GAME
-
-
+        clueBox.removeEventListener("mouseenter", giveClue);
+        document.body.removeEventListener("keydown", pressKey);
 
     }
 
@@ -112,9 +109,9 @@ function loseLive() {
     }
 }
 
+// restem una vida i mostrem una lletra que no haguem encertat encara
 function giveClue() {
 
-    // restem una vida
     loseLive();
 
     // ensenyem una lletra no registrada ja:
@@ -129,6 +126,14 @@ function giveClue() {
 
 }
 
+// al moure el ratolí fora de la capsa de pista, aquesta torna a mostrar '?'
+function cleanClueBox() {
+
+    clueText.innerHTML = "?";
+
+}
+
+// funció del teclat
 function pressKey(event) {
     // guardem la tecla premuda en una variable
     pressedKey = event.key.toUpperCase();
@@ -169,7 +174,7 @@ function pressKey(event) {
 }
 
 
-// missatges per al desenvolupador
+// missatges de la consola per al desenvolupador
 function devConsoleInfo() {
     console.log("\n Status: " + gameStatus.status +
         "\n Lives: " + gameStatus.lives +
