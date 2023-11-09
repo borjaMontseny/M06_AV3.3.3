@@ -50,6 +50,7 @@ window.onload = function () {
     clueBox.addEventListener("mouseleave", cleanClueBox);
     letters = document.getElementById("letters");
     clueText = document.getElementById("clue").getElementsByTagName("span")[0];
+    letters.innerHTML = gameStatus.wordCompleted
 
     devConsoleInfo();
     showWelcomeMessage();
